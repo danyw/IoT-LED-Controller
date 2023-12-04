@@ -5,6 +5,8 @@ import { Route, Routes } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
+import Lamps from './components/Lamps';
+// import Line from './Views/line';
 
 
 function App() {
@@ -19,9 +21,11 @@ function App() {
           <Sidebar isSidebar={isSidebar} />
           <main className="main">
             <Topbar setIsSidebar={setIsSidebar} />
-
+<Lamps />
+{/* <Line /> */}
             <Routes>
               {/* <Route path="/" element={<Dashboard />} /> */}
+              {/* <Route path="/lamps" element={<Lamps />} /> */}
               
 
             </Routes>
