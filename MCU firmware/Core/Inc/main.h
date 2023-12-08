@@ -57,16 +57,22 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define TIM1_CH1_Pin GPIO_PIN_8
+#define TIM1_CH1_GPIO_Port GPIOA
 #define B1_Pin GPIO_PIN_4
 #define B1_GPIO_Port GPIOC
 #define LD2_Pin GPIO_PIN_0
 #define LD2_GPIO_Port GPIOB
 #define LD3_Pin GPIO_PIN_1
 #define LD3_GPIO_Port GPIOB
+#define soft_en_24v_Pin GPIO_PIN_13
+#define soft_en_24v_GPIO_Port GPIOB
 #define JTMS_Pin GPIO_PIN_13
 #define JTMS_GPIO_Port GPIOA
 #define JTCK_Pin GPIO_PIN_14
 #define JTCK_GPIO_Port GPIOA
+#define led_enable_Pin GPIO_PIN_10
+#define led_enable_GPIO_Port GPIOC
 #define B2_Pin GPIO_PIN_0
 #define B2_GPIO_Port GPIOD
 #define B3_Pin GPIO_PIN_1
@@ -81,6 +87,8 @@ void Error_Handler(void);
 #define STLINK_TX_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+#define PWM_CHANNELS 4
+extern uint16_t pwmx_brightness[PWM_CHANNELS][24];
 
 /* USER CODE END Private defines */
 
