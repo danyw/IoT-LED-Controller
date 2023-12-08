@@ -136,7 +136,8 @@ int main(void)
 	  }
 
 	  if ((HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_0 )) == 0) {
-		  set_brightness_single(1, 500);
+		  //set_brightness_single(1, 500);
+		  effect_rainbow();
 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
 	  }
 

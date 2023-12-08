@@ -22,7 +22,7 @@ static void update_pwm_duty_cycle(uint8_t pwm_index, uint32_t dutyCycle) {
     }
 
     PWM_Channel channel = PWM_Channels[pwm_index - 1];
-    uint32_t period = __HAL_TIM_GET_AUTORELOAD(channel.htim);
+   // uint32_t period = __HAL_TIM_GET_AUTORELOAD(channel.htim);
    // uint32_t pulse = (dutyCycle * (period + 1)) / 100;
     __HAL_TIM_SET_COMPARE(channel.htim, channel.channel, dutyCycle);
 }
@@ -33,17 +33,13 @@ void set_brightness_single(uint8_t pwm_index, uint32_t brightness) {
 	update_pwm_duty_cycle(pwm_index, brightness);
 }
 
-//void set_brightness_multiple(const uint8_t brightness[LED_CHANNELS]) {
-//    for (uint8_t i = 0; i < LED_CHANNELS; i++) {
-//        update_pwm_duty_cycle(i, brightness[i]);
-//    }
-//}
-//
-//void set_brightness_all(uint8_t brightness) {
-//    for (uint8_t i = 0; i < LED_CHANNELS; i++) {
-//        update_pwm_duty_cycle(i, brightness);
-//    }
-//}
+
+
+void set_brightness_all(uint32_t brightness) {
+    for (uint8_t i = 0; i < PWM_CHANNELS; i++) {
+        update_pwm_duty_cycle(i + 1, brightness);
+    }
+}
 
 void driver_module_power(uint8_t state) {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
@@ -54,17 +50,33 @@ void led_enable(uint8_t state) {
 }
 
 void effect_rainbow(void) {
-    // Implementation of the rainbow effect
+    for (uint8_t i = 0; i < 1000; i++) {
+        for (uint8_t channel = 0; channel < PWM_CHANNELS; channel++) {
+            uint32_t brightness = ((i + channel) * 100) % 1000; // Example calculation
+            set_brightness_single(channel + 1, brightness);
+        }
+        HAL_Delay(20); //  slow down the effect
+    }
 }
 
 void effect_fade_in(uint8_t channel, uint8_t final_brightness, uint16_t duration) {
-    // Implementation of the fade-in effect
+    uint32_t stepDelay = duration / final_brightness;
+    for (uint32_t brightness = 0; brightness <= final_brightness; brightness++) {
+        set_brightness_single(channel, brightness);
+        HAL_Delay(stepDelay);
+    }
 }
+
+
 
 void effect_fade_out(uint8_t channel, uint16_t duration) {
-    // Implementation of the fade-out effect
+    uint32_t currentBrightness = pwmx_brightness[channel - 1][0];
+    uint32_t stepDelay = duration / currentBrightness;
+    for (int32_t brightness = currentBrightness; brightness >= 0; brightness--) {
+        set_brightness_single(channel, brightness);
+        HAL_Delay(stepDelay);
+    }
 }
-
 
 
 
