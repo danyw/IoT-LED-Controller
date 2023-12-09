@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "memorymap.h"
 #include "rtc.h"
 #include "tim.h"
@@ -56,7 +57,10 @@
 // uint16_t * const PWMX_BRIGHTNESS[PWM_CHANNELS][24] = (uint8_t *const) adress;	// uncomment for release
 uint16_t pwmx_brightness[PWM_CHANNELS][24];	// uncomment for dev
 
-
+uint16_t voltage = 0;
+uint16_t current = 0;
+uint16_t temp = 0;
+uint16_t rawValues[3];
 
 
 /* USER CODE END PV */
@@ -104,6 +108,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
   MX_TIM1_Init();
@@ -114,12 +119,16 @@ int main(void)
   HAL_TIM_PWM_Init(&htim1);
   HAL_TIM_PWM_Init(&htim1);
 
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+
   // Initialize each value in the array to 50 for dev, for release use flash
-	for (int channel = 0; channel < PWM_CHANNELS; ++channel) {
-		for (int value = 0; value < 24; ++value) {
-			pwmx_brightness[channel][value] = 50;
-		}
-	}
+  for (int channel = 0; channel < PWM_CHANNELS; ++channel) {
+	  for (int value = 0; value < 24; ++value) {
+		  pwmx_brightness[channel][value] = 50;
+	  }
+  }
+
+
 
 
 
@@ -157,6 +166,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
@@ -268,6 +278,16 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 	while(HAL_RTC_SetAlarm_IT(hrtc, &sAlarm, FORMAT_BIN)!=HAL_OK){}
 
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+	  HAL_ADC_Start_DMA(&hadc1, (uint32_t *) rawValues, 3);
+
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+	for(uint8_t i=0; i<hadc1.Init.NbrOfConversion; i++) {
+		voltage = (uint16_t) rawValues[0];
+		current = (uint16_t) rawValues[1];
+		temp = (uint16_t) rawValues[2];
+	}
 }
 
 /* USER CODE END 4 */
