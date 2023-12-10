@@ -95,6 +95,8 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #define PWM_CHANNELS 4
 extern uint16_t pwmx_brightness[PWM_CHANNELS][24];
+extern uint16_t rawValues[3]; // Assuming 3 ADC channels: Voltage, Current, Temperature
+
 
 /* USER CODE END Private defines */
 

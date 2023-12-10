@@ -30,6 +30,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "led_control.h"
+#include "sensors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,10 +57,6 @@
 
 // uint16_t * const PWMX_BRIGHTNESS[PWM_CHANNELS][24] = (uint8_t *const) adress;	// uncomment for release
 uint16_t pwmx_brightness[PWM_CHANNELS][24];	// uncomment for dev
-
-uint16_t voltage = 0;
-uint16_t current = 0;
-uint16_t temp = 0;
 uint16_t rawValues[3];
 
 
@@ -116,20 +113,17 @@ int main(void)
   MX_ADC1_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_PWM_Init(&htim1);
-  HAL_TIM_PWM_Init(&htim1);
-
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  HAL_TIM_PWM_Init(&htim1);
+  HAL_TIM_PWM_Init(&htim1);
+  Sensors_Init(&hadc1);
 
-  // Initialize each value in the array to 50 for dev, for release use flash
+  // TODO DEV Initialize each value in the array to 50 for dev, for release use flash
   for (int channel = 0; channel < PWM_CHANNELS; ++channel) {
 	  for (int value = 0; value < 24; ++value) {
 		  pwmx_brightness[channel][value] = 50;
 	  }
   }
-
-
-
 
 
 
@@ -278,15 +272,16 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 	while(HAL_RTC_SetAlarm_IT(hrtc, &sAlarm, FORMAT_BIN)!=HAL_OK){}
 
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-	  HAL_ADC_Start_DMA(&hadc1, (uint32_t *) rawValues, 3);
+	  Sensors_Measure();	// ADC DMA start; voltage, current, temp
 
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-	for(uint8_t i=0; i<hadc1.Init.NbrOfConversion; i++) {
-		voltage = (uint16_t) rawValues[0];
-		current = (uint16_t) rawValues[1];
-		temp = (uint16_t) rawValues[2];
+	if(hadc == &hadc1) {
+		float voltage = Sensors_GetVoltage(rawValues[0]);
+		float current = Sensors_GetCurrent(rawValues[1]);
+		float temerature = Sensors_GetTemperature(rawValues[2]);
+		float power = Sensors_CalculatePower(voltage, current);
 	}
 }
 
