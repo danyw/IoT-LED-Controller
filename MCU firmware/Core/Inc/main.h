@@ -93,9 +93,19 @@ void Error_Handler(void);
 #define STLINK_TX_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define PWM_CHANNELS 4
-extern uint16_t pwmx_brightness[PWM_CHANNELS][24];
+#define PWM_CHANNELS_MAX 6
+
 extern uint16_t rawValues[3]; // Assuming 3 ADC channels: Voltage, Current, Temperature
+
+typedef struct {
+	uint8_t  PWM_CHANNELS;
+	uint16_t pwmx_brightness[PWM_CHANNELS_MAX][24];
+    float CurrentSenseFactor;
+    float TemperatureOffset;
+} SystemSettings_t;
+
+extern SystemSettings_t SystemSettings;
+
 
 
 /* USER CODE END Private defines */

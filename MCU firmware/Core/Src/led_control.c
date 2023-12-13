@@ -36,7 +36,7 @@ void set_brightness_single(uint8_t pwm_index, uint32_t brightness) {
 
 
 void set_brightness_all(uint32_t brightness) {
-    for (uint8_t i = 0; i < PWM_CHANNELS; i++) {
+    for (uint8_t i = 0; i < SystemSettings.PWM_CHANNELS; i++) {
         update_pwm_duty_cycle(i + 1, brightness);
     }
 }
@@ -51,7 +51,7 @@ void led_enable(uint8_t state) {
 
 void effect_rainbow(void) {
     for (uint8_t i = 0; i < 1000; i++) {
-        for (uint8_t channel = 0; channel < PWM_CHANNELS; channel++) {
+        for (uint8_t channel = 0; channel < SystemSettings.PWM_CHANNELS; channel++) {
             uint32_t brightness = ((i + channel) * 100) % 1000; // Example calculation
             set_brightness_single(channel + 1, brightness);
         }
@@ -70,7 +70,7 @@ void effect_fade_in(uint8_t channel, uint8_t final_brightness, uint16_t duration
 
 
 void effect_fade_out(uint8_t channel, uint16_t duration) {
-    uint32_t currentBrightness = pwmx_brightness[channel - 1][0];
+    uint32_t currentBrightness = SystemSettings.pwmx_brightness[channel - 1][0];
     uint32_t stepDelay = duration / currentBrightness;
     for (int32_t brightness = currentBrightness; brightness >= 0; brightness--) {
         set_brightness_single(channel, brightness);

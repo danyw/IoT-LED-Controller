@@ -26,11 +26,13 @@
 #include "usart.h"
 #include "usb.h"
 #include "gpio.h"
+#include "stdio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "led_control.h"
 #include "sensors.h"
+#include "flash_storage.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,14 +53,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// Initial settings for LED driver module
-
-// uint8_t * const PWM_CHANNELS = (uint8_t *const) adress;	// uncomment for release
-
-// uint16_t * const PWMX_BRIGHTNESS[PWM_CHANNELS][24] = (uint8_t *const) adress;	// uncomment for release
-uint16_t pwmx_brightness[PWM_CHANNELS][24];	// uncomment for dev
+SystemSettings_t SystemSettings;
 uint16_t rawValues[3];
-
 
 /* USER CODE END PV */
 
@@ -71,6 +67,18 @@ void PeriphCommonClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+// one wire debugging
+int _write(int file, char *ptr, int len) {
+	// this is used by uts and printf
+	int i=0;
+	for(i=0; i<len; i++)
+		ITM_SendChar((*ptr++));
+	return len;
+}
+
+//uint8_t dataToWrite[] = "testing writting/erasing flash";
+//uint8_t dataToRead[100]; // Make sure this is large enough for the dataToWrite plus any null termination if used
 
 /* USER CODE END 0 */
 
@@ -87,7 +95,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -96,7 +104,7 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
-/* Configure the peripherals common clocks */
+  /* Configure the peripherals common clocks */
   PeriphCommonClock_Config();
 
   /* USER CODE BEGIN SysInit */
@@ -118,15 +126,43 @@ int main(void)
   HAL_TIM_PWM_Init(&htim1);
   Sensors_Init(&hadc1);
 
-  // TODO DEV Initialize each value in the array to 50 for dev, for release use flash
-  for (int channel = 0; channel < PWM_CHANNELS; ++channel) {
-	  for (int value = 0; value < 24; ++value) {
-		  pwmx_brightness[channel][value] = 50;
-	  }
-  }
+  HAL_Delay(100);
+  LoadSettingsFromFlash();
+  HAL_Delay(100);
 
 
 
+
+//store_flash_memory(FLASH_ADDRESS_STRING, (uint8_t *)char_random, sizeof(char_random));
+// Write data to flash
+//  if(Flash_Write(FLASH_USER_START_ADDR, dataToWrite, sizeof(dataToWrite)) != HAL_OK) {
+//   //  Handle error
+//  }
+//
+
+
+//  ReadSettingsFromFlash(&SystemSettings);
+//  HAL_Delay(100);
+  // TODO DEV generating sample settings
+//  generateSampleData(&SystemSettings);
+
+//     SystemSettings.CurrentSenseFactor = 29.28f;
+//  HAL_Delay(100);
+//  WriteSettingsToFlash(&SystemSettings);
+//  HAL_Delay(1000);
+
+  // Load settings from the flash to SystemSettings
+//  LoadSettingsFromFlash();
+
+  // Print sample data for verification
+//  SystemSettings_t settings;
+//  for (int channel = 0; channel < PWM_CHANNELS_MAX; ++channel) {
+//      printf("Channel %d: ", channel);
+//      for (int hour = 0; hour < 24; ++hour) {
+//          printf("%d ", settings.pwmx_brightness[channel][hour]);
+//      }
+//      printf("\n");
+//  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -147,15 +183,7 @@ int main(void)
 	  if ((HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_0 )) == 0) {
 		  //set_brightness_single(1, 500);
 		  effect_rainbow();
-
 	  }
-
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-
-//	  HAL_TIM_Base_Start(&htim1);
-
-
-
 
     /* USER CODE END WHILE */
 

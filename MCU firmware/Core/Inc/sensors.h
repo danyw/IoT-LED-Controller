@@ -14,6 +14,7 @@ extern float VrefInt; // Internal reference voltage
 
 
 
+
 void Sensors_Init(ADC_HandleTypeDef* hadc);
 void Sensors_Measure(void);
 float Sensors_GetVoltage(uint16_t raw);
