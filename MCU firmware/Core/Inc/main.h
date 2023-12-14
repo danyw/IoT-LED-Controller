@@ -28,6 +28,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbxx_hal.h"
+#include <stdbool.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -99,6 +100,7 @@ extern uint16_t rawValues[3]; // Assuming 3 ADC channels: Voltage, Current, Temp
 
 typedef struct {
 	uint8_t  PWM_CHANNELS;
+	bool Pwm_on[6];
 	uint16_t pwmx_brightness[PWM_CHANNELS_MAX][24];
     float CurrentSenseFactor;
     float TemperatureOffset;

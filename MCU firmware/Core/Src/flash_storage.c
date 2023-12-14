@@ -1,5 +1,6 @@
 #include "flash_storage.h"
 
+
 // helper function. calculates the page number for the address
 static uint32_t GetPage(uint32_t Addr)
 {
@@ -148,7 +149,17 @@ void WriteSettingsToFlash(SystemSettings_t* settings) {
   }
 
 void generateSampleData(SystemSettings_t* settings) {
+	const uint8_t STRING_LENGTH;
     // Sample values for CurrentSenseFactor and TemperatureOffset
+	settings->PWM_CHANNELS = 4;
+	settings->Pwm_on[0] = true;
+	settings->Pwm_on[1] = true;
+	settings->Pwm_on[2] = true;
+	settings->Pwm_on[3] = true;
+	settings->Pwm_on[4] = false;
+	settings->Pwm_on[5] = false;
+
+
     settings->CurrentSenseFactor = 1.23f;
     settings->TemperatureOffset = -5.5f;
 

@@ -1,5 +1,7 @@
 #include "led_control.h"
 #include "tim.h"
+#include "rtc.h"
+
 
 typedef struct {
     TIM_HandleTypeDef* htim;
@@ -78,9 +80,23 @@ void effect_fade_out(uint8_t channel, uint16_t duration) {
     }
 }
 
+void start_led_control(const SystemSettings_t *settings) {
+    driver_module_power(1);
+    HAL_Delay(150);
+    led_enable(1);
+    HAL_Delay(20);
+    RTC_TimeTypeDef sTime;
+    HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
+    uint8_t time = sTime.Hours;
 
+    for (uint8_t i = 0; i < PWM_CHANNELS_MAX ; i++) {
+    	if (settings->Pwm_on[i] == true) {
+			update_pwm_duty_cycle(i + 1, settings->pwmx_brightness[i][time]);
+			HAL_TIM_PWM_Start( PWM_Channels[i].htim, PWM_Channels[i].channel);
+		}
+    }
 
-
+}
 
 
 

@@ -130,7 +130,7 @@ int main(void)
   LoadSettingsFromFlash();
   HAL_Delay(100);
 
-
+//  start_led_control(const SystemSettings_t *settings);
 
 
 //store_flash_memory(FLASH_ADDRESS_STRING, (uint8_t *)char_random, sizeof(char_random));
@@ -142,14 +142,14 @@ int main(void)
 
 
 //  ReadSettingsFromFlash(&SystemSettings);
-//  HAL_Delay(100);
+  HAL_Delay(100);
   // TODO DEV generating sample settings
-//  generateSampleData(&SystemSettings);
+  generateSampleData(&SystemSettings);
 
 //     SystemSettings.CurrentSenseFactor = 29.28f;
-//  HAL_Delay(100);
-//  WriteSettingsToFlash(&SystemSettings);
-//  HAL_Delay(1000);
+  HAL_Delay(100);
+  WriteSettingsToFlash(&SystemSettings);
+  HAL_Delay(1000);
 
   // Load settings from the flash to SystemSettings
 //  LoadSettingsFromFlash();
@@ -163,27 +163,14 @@ int main(void)
 //      }
 //      printf("\n");
 //  }
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4 )) == 0) {
-
-		  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-		  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-		  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-		  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-		  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-		  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-		  HAL_Delay(500);
-	  }
-
-	  if ((HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_0 )) == 0) {
-		  //set_brightness_single(1, 500);
-		  effect_rainbow();
-	  }
 
     /* USER CODE END WHILE */
 
@@ -310,6 +297,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 		float current = Sensors_GetCurrent(rawValues[1]);
 		float temerature = Sensors_GetTemperature(rawValues[2]);
 		float power = Sensors_CalculatePower(voltage, current);
+		printf("Voltage: %f V, Current: %f A, Temperature: %f C, Power: %f W\n", voltage, current, temerature, power);
 	}
 }
 
