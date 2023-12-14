@@ -98,5 +98,39 @@ void start_led_control(const SystemSettings_t *settings) {
 
 }
 
+void stop_led_control(void) {
+    for (uint8_t i = 0; i < PWM_CHANNELS_MAX ; i++) {
+    	HAL_TIM_PWM_Stop( PWM_Channels[i].htim, PWM_Channels[i].channel);
+    }
+    led_enable(0);
+    HAL_Delay(20);
+    driver_module_power(0);
+}
 
+
+
+void update_led_control(void) {
+    RTC_TimeTypeDef sTime;
+    HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
+    uint8_t currentHour = sTime.Hours;
+    uint8_t minutes = sTime.Minutes;
+
+    // Calculate the next hour, wrapping around at 24
+    uint8_t nextHour = (currentHour + 1) % 24;
+
+    for (uint8_t i = 0; i < PWM_CHANNELS_MAX; i++) {
+        if (SystemSettings.Pwm_on[i] == true) {
+            // Get the brightness for the current and next hours
+            uint32_t currentBrightness = SystemSettings.pwmx_brightness[i][currentHour];
+            uint32_t nextBrightness = SystemSettings.pwmx_brightness[i][nextHour];
+
+            // Calculate the difference and the proportional brightness
+            int32_t brightnessDifference = nextBrightness - currentBrightness;
+            uint32_t proportionalBrightness = currentBrightness + (brightnessDifference * minutes / 60);
+
+            // Update the PWM duty cycle
+            set_brightness_single(i + 1, proportionalBrightness);
+        }
+    }
+}
 

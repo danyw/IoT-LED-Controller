@@ -26,7 +26,6 @@
 #include "usart.h"
 #include "usb.h"
 #include "gpio.h"
-#include "stdio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -95,7 +94,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -104,7 +103,7 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* Configure the peripherals common clocks */
+/* Configure the peripherals common clocks */
   PeriphCommonClock_Config();
 
   /* USER CODE BEGIN SysInit */
@@ -281,13 +280,19 @@ void PeriphCommonClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
-	RTC_AlarmTypeDef sAlarm;
-	HAL_RTC_GetAlarm(hrtc,&sAlarm,RTC_ALARM_A,FORMAT_BIN);
-	sAlarm.AlarmTime.Seconds = (sAlarm.AlarmTime.Seconds + 10) % 60;
-	while(HAL_RTC_SetAlarm_IT(hrtc, &sAlarm, FORMAT_BIN)!=HAL_OK){}
+	if (__HAL_RTC_ALARM_GET_FLAG(hrtc, RTC_FLAG_ALRAF)) {
+		RTC_AlarmTypeDef sAlarm;
+		HAL_RTC_GetAlarm(hrtc,&sAlarm,RTC_ALARM_A,FORMAT_BIN);
+		sAlarm.AlarmTime.Seconds = (sAlarm.AlarmTime.Seconds + 10) % 60;
+		while(HAL_RTC_SetAlarm_IT(hrtc, &sAlarm, FORMAT_BIN)!=HAL_OK){}
 
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-	  Sensors_Measure();	// ADC DMA start; voltage, current, temp
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+		  Sensors_Measure();	// ADC DMA start; voltage, current, temp
+	}
+	else if (__HAL_RTC_ALARM_GET_FLAG(hrtc, RTC_FLAG_ALRBF)) {
+        // Alarm B triggered the callback
+        update_led_control();
+	}
 
 }
 

@@ -13,5 +13,6 @@ void effect_rainbow(void);
 void effect_fade_in(uint8_t channel, uint8_t final_brightness, uint16_t duration);
 void effect_fade_out(uint8_t channel, uint16_t duration);
 void start_led_control(const SystemSettings_t *settings);
+void update_led_control(void);
 
 #endif // LED_CONTROL_H
