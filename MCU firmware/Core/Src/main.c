@@ -21,6 +21,7 @@
 #include "adc.h"
 #include "dma.h"
 #include "memorymap.h"
+#include "rf.h"
 #include "rtc.h"
 #include "tim.h"
 #include "usart.h"
@@ -32,6 +33,8 @@
 #include "led_control.h"
 #include "sensors.h"
 #include "flash_storage.h"
+#include "app_zigbee.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,6 +98,8 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+  /* Config code for STM32_WPAN (HSE Tuning must be done before system clock configuration) */
+  MX_APPE_Config();
 
   /* USER CODE BEGIN Init */
 
@@ -119,6 +124,7 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   MX_RTC_Init();
+  MX_RF_Init();
   /* USER CODE BEGIN 2 */
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
   HAL_TIM_PWM_Init(&htim1);
@@ -126,12 +132,11 @@ int main(void)
   Sensors_Init(&hadc1);
 
   HAL_Delay(100);
-  LoadSettingsFromFlash();
+  LoadSettingsFromFlash();	// load all the system settings from the flash memory
   HAL_Delay(100);
 
-//  start_led_control(const SystemSettings_t *settings);
-
-
+  start_led_control(&SystemSettings); // Pass the address of the settings struct to start_led_control
+  HAL_Delay(20);
 //store_flash_memory(FLASH_ADDRESS_STRING, (uint8_t *)char_random, sizeof(char_random));
 // Write data to flash
 //  if(Flash_Write(FLASH_USER_START_ADDR, dataToWrite, sizeof(dataToWrite)) != HAL_OK) {
@@ -140,18 +145,12 @@ int main(void)
 //
 
 
-//  ReadSettingsFromFlash(&SystemSettings);
-  HAL_Delay(100);
+//  ReadSettingsFromFlash(&SystemSettings);	// it reads the settings from the flash memory and saves in the specified place
+
   // TODO DEV generating sample settings
-  generateSampleData(&SystemSettings);
+//  generateSampleData(&SystemSettings);	// generates sample system settings, used for debugging
+//  WriteSettingsToFlash(&SystemSettings);	// writes settings to flash
 
-//     SystemSettings.CurrentSenseFactor = 29.28f;
-  HAL_Delay(100);
-  WriteSettingsToFlash(&SystemSettings);
-  HAL_Delay(1000);
-
-  // Load settings from the flash to SystemSettings
-//  LoadSettingsFromFlash();
 
   // Print sample data for verification
 //  SystemSettings_t settings;
@@ -166,16 +165,29 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  /* Init code for STM32_WPAN */
+//  MX_APPE_Init();
+
+  /* Inside the main function, after HAL_Init() and other initializations */
+//  APP_ZIGBEE_Init();
+
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
 
     /* USER CODE END WHILE */
+//    MX_APPE_Process();
 
     /* USER CODE BEGIN 3 */
-
-  }
+//    if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4 )) == GPIO_PIN_RESET) {
+////        start_led_control(&SystemSettings); // Pass the address of the settings struct to start_led_control
+////        HAL_Delay(3000);
+////        stop_led_control();
+//    	  }
+//    HAL_Delay(500);
+//  }
   /* USER CODE END 3 */
 }
 
@@ -257,8 +269,8 @@ void PeriphCommonClock_Config(void)
 
   /** Initializes the peripherals clock
   */
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_USB
-                              |RCC_PERIPHCLK_ADC;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_RFWAKEUP
+                              |RCC_PERIPHCLK_USB|RCC_PERIPHCLK_ADC;
   PeriphClkInitStruct.PLLSAI1.PLLN = 24;
   PeriphClkInitStruct.PLLSAI1.PLLP = RCC_PLLP_DIV2;
   PeriphClkInitStruct.PLLSAI1.PLLQ = RCC_PLLQ_DIV2;
@@ -266,6 +278,7 @@ void PeriphCommonClock_Config(void)
   PeriphClkInitStruct.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_USBCLK|RCC_PLLSAI1_ADCCLK;
   PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLLSAI1;
   PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
+  PeriphClkInitStruct.RFWakeUpClockSelection = RCC_RFWKPCLKSOURCE_HSE_DIV1024;
   PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
   PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE0;
 
@@ -286,7 +299,6 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 		sAlarm.AlarmTime.Seconds = (sAlarm.AlarmTime.Seconds + 10) % 60;
 		while(HAL_RTC_SetAlarm_IT(hrtc, &sAlarm, FORMAT_BIN)!=HAL_OK){}
 
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
 		  Sensors_Measure();	// ADC DMA start; voltage, current, temp
 	}
 	else if (__HAL_RTC_ALARM_GET_FLAG(hrtc, RTC_FLAG_ALRBF)) {

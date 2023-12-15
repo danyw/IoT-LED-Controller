@@ -1,6 +1,5 @@
 #include "flash_storage.h"
 
-
 // helper function. calculates the page number for the address
 static uint32_t GetPage(uint32_t Addr)
 {
@@ -164,21 +163,17 @@ void generateSampleData(SystemSettings_t* settings) {
     settings->TemperatureOffset = -5.5f;
 
     // Generate PWM brightness values
+    int static_brightness[PWM_CHANNELS_MAX][24] = {
+            {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 50, 50, 50, 50},
+            {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 50, 50, 50, 50},
+            {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 50, 50, 50, 50},
+            {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 50, 50, 50, 50},
+            {0},  // Channel 5 is off
+            {0}   // Channel 6 is off
+        };
     for (int channel = 0; channel < PWM_CHANNELS_MAX; ++channel) {
-        for (int hour = 0; hour < 24; ++hour) {
-            // Calculate peak time for each channel
-            int peakHour = 6 * channel + 12;
-            if (peakHour >= 24) peakHour -= 24;
-
-            // Calculate brightness
-            int brightness;
-            if (hour <= peakHour) {
-                brightness = (int)((1000.0 / peakHour) * hour);
-            } else {
-                brightness = (int)(1000 - (1000.0 / (24 - peakHour)) * (hour - peakHour));
-            }
-
-            settings->pwmx_brightness[channel][hour] = brightness;
-        }
-    }
+           for (int hour = 0; hour < 24; ++hour) {
+               settings->pwmx_brightness[channel][hour] = static_brightness[channel][hour];
+           }
+       }
 }
