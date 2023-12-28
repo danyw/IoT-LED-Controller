@@ -3,6 +3,8 @@
 #include "rtc.h"
 
 
+
+
 typedef struct {
     TIM_HandleTypeDef* htim;
     uint32_t channel;
@@ -29,13 +31,9 @@ static void update_pwm_duty_cycle(uint8_t pwm_index, uint32_t dutyCycle) {
     __HAL_TIM_SET_COMPARE(channel.htim, channel.channel, dutyCycle);
 }
 
-
-
 void set_brightness_single(uint8_t pwm_index, uint32_t brightness) {
 	update_pwm_duty_cycle(pwm_index, brightness);
 }
-
-
 
 void set_brightness_all(uint32_t brightness) {
     for (uint8_t i = 0; i < SystemSettings.PWM_CHANNELS; i++) {
@@ -68,8 +66,6 @@ void effect_fade_in(uint8_t channel, uint8_t final_brightness, uint16_t duration
         HAL_Delay(stepDelay);
     }
 }
-
-
 
 void effect_fade_out(uint8_t channel, uint16_t duration) {
     uint32_t currentBrightness = SystemSettings.pwmx_brightness[channel - 1][0];
@@ -108,8 +104,6 @@ void stop_led_control(void) {
     driver_module_power(0);
 }
 
-
-
 void update_led_control(void) {
     RTC_TimeTypeDef sTime;
     HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
@@ -133,5 +127,19 @@ void update_led_control(void) {
             set_brightness_single(i + 1, proportionalBrightness);
         }
     }
+}
+
+void turn_on_single(uint8_t pwm_index) {
+	SystemSettings.Pwm_on[pwm_index] = true;
+	RTC_TimeTypeDef sTime;
+	HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
+	uint8_t currentHour = sTime.Hours;
+	uint8_t minutes = sTime.Minutes;
+	uint8_t nextHour = (currentHour + 1) % 24;
+	uint32_t currentBrightness = SystemSettings.pwmx_brightness[pwm_index][currentHour];
+	uint32_t nextBrightness = SystemSettings.pwmx_brightness[pwm_index][nextHour];
+	int32_t brightnessDifference = nextBrightness - currentBrightness;
+	uint32_t proportionalBrightness = currentBrightness + (brightnessDifference * minutes / 60);
+	set_brightness_single(pwm_index + 1, proportionalBrightness);
 }
 

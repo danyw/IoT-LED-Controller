@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
+#include "ipcc.h"
 #include "memorymap.h"
 #include "rf.h"
 #include "rtc.h"
@@ -111,6 +112,9 @@ int main(void)
 /* Configure the peripherals common clocks */
   PeriphCommonClock_Config();
 
+  /* IPCC initialisation */
+  MX_IPCC_Init();
+
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
@@ -166,11 +170,7 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Init code for STM32_WPAN */
-//  MX_APPE_Init();
-
-  /* Inside the main function, after HAL_Init() and other initializations */
-//  APP_ZIGBEE_Init();
-
+  MX_APPE_Init();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -178,7 +178,7 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-//    MX_APPE_Process();
+    MX_APPE_Process();
 
     /* USER CODE BEGIN 3 */
 //    if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4 )) == GPIO_PIN_RESET) {
@@ -187,7 +187,12 @@ int main(void)
 ////        stop_led_control();
 //    	  }
 //    HAL_Delay(500);
-//  }
+
+    if ((HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4 )) == GPIO_PIN_RESET) {
+    	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+    	HAL_Delay(300);
+    }
+  }
   /* USER CODE END 3 */
 }
 

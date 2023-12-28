@@ -1,7 +1,7 @@
 #ifndef LED_CONTROL_H
 #define LED_CONTROL_H
-
 #include "main.h"
+
 
 
 // Function Prototypes
@@ -15,5 +15,6 @@ void effect_fade_out(uint8_t channel, uint16_t duration);
 void start_led_control(SystemSettings_t* settings);
 void update_led_control(void);
 void stop_led_control(void);
+void turn_on_single(uint8_t pwm_index);
 
 #endif // LED_CONTROL_H
