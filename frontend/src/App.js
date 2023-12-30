@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Lamps from './components/Lamps';
 // import Line from './Views/line';
-
+import LEDProfiles from './views/LED Profiles/LEDProfiles';
 
 function App() {
   const [isSidebar, setIsSidebar] = useState(true);
@@ -22,6 +22,7 @@ function App() {
           <main className="main">
             <Topbar setIsSidebar={setIsSidebar} />
 <Lamps />
+<LEDProfiles />
 {/* <Line /> */}
             <Routes>
               {/* <Route path="/" element={<Dashboard />} /> */}

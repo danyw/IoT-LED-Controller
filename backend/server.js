@@ -8,27 +8,28 @@ const corsOptions = require("./config/corsOptions");
 // const mongoose = require("mongoose");
 const mqtt = require('mqtt');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 
 // connectDB();
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // app.use('/users', require('./routes/userRoutes'));
-// const mqttRoutes = require('./routes/mqttRoutes');
+const mqttRoutes = require('./routes/mqttRoutes');
 
 
 // app.use(errorHandler);
 
 // routes
-const subscriberRouter = require("./routes/subscriberRoutes");
-const publisherRouter = require("./routes/publisherRoutes");
+// const subscriberRouter = require("./routes/subscriberRoutes");
+// const publisherRouter = require("./routes/publisherRoutes");
 
   
 // app.use("/subscriber", subscriberRouter);
 // app.use("/publisher", publisherRouter);
-// app.use('/mqtt', mqttRoutes);
+app.use('/mqtt', mqttRoutes);
 
 // mongoose.set('strictQuery', false);
 // mongoose.connection.once("open", () => {
