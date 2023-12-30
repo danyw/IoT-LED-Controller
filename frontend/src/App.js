@@ -21,12 +21,13 @@ function App() {
           <Sidebar isSidebar={isSidebar} />
           <main className="main">
             <Topbar setIsSidebar={setIsSidebar} />
-<Lamps />
-<LEDProfiles />
+{/* <Lamps /> */}
+
 {/* <Line /> */}
             <Routes>
               {/* <Route path="/" element={<Dashboard />} /> */}
               {/* <Route path="/lamps" element={<Lamps />} /> */}
+              <Route path="/ledprofiles" element={<LEDProfiles />} />
               
 
             </Routes>

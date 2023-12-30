@@ -24,6 +24,7 @@ import DataUsageOutlinedIcon from '@mui/icons-material/DataUsageOutlined';
 import EnergySavingsLeafOutlinedIcon from '@mui/icons-material/EnergySavingsLeafOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import FolderSpecialOutlinedIcon from '@mui/icons-material/FolderSpecialOutlined';
+import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -48,6 +49,7 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState('Dashboard');
+  
   return (
     <Box
       sx={{
@@ -68,7 +70,7 @@ const Sidebar = () => {
         },
       }}
     >
-      <ProSidebar collapsed={isCollapsed}>
+      <ProSidebar collapsed={isCollapsed} >
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
@@ -228,6 +230,13 @@ const Sidebar = () => {
               title="Light Profiles"
               to="/lightprofiles"
               icon={<CreateNewFolderOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="LED Profiles"
+              to="/ledprofiles"
+              icon={<TipsAndUpdatesOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
