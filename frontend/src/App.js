@@ -1,38 +1,46 @@
-import { useState } from 'react';
 import { useMode } from './hooks/useMode';
 import { ColorModeContext } from './context/ColorModeContext';
 import { Route, Routes } from 'react-router-dom';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import Sidebar from './components/Sidebar';
-import Topbar from './components/Topbar';
+import Layout from './components/Layout';
+import DashLayout from './components/DashLayout';
+import LedProfiles from './features/led profiles/LedProfiles';
+import LampGroupsList from './features/lamp groups/LampGroupsList';
+import LampGroup from './features/lamp groups/LampGroup';
 import Lamps from './components/Lamps';
-// import Line from './Views/line';
-import LEDProfiles from './views/LED Profiles/LEDProfiles';
+import Dashboard from './features/dashboard/Dashboard';
+import AllLamps from './features/lamp groups/AllLamps';
 
 function App() {
-  const [isSidebar, setIsSidebar] = useState(true);
   const [theme, colorMode] = useMode();
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          <Sidebar isSidebar={isSidebar} />
-          <main className="main">
-            <Topbar setIsSidebar={setIsSidebar} />
-{/* <Lamps /> */}
 
-{/* <Line /> */}
-            <Routes>
-              {/* <Route path="/" element={<Dashboard />} /> */}
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {/* Public routes */}
+            {/* Private routes */}
+            <Route path="dash" element={<DashLayout />}>
+              <Route index element={<Dashboard />} />
               {/* <Route path="/lamps" element={<Lamps />} /> */}
-              <Route path="/ledprofiles" element={<LEDProfiles />} />
-              
+              <Route path="alllamps">
+                <Route index element={<AllLamps />} />
+              </Route>
+              <Route path="ledprofiles">
+                <Route index element={<LedProfiles />} />
+              </Route>
 
-            </Routes>
-          </main>
-        </div>
+              <Route path="lampgroupslist">
+                <Route index element={<LampGroupsList />} />
+                <Route path=":id" element={<LampGroup />} />
+                {/* <Route path="newgroup" element={<NewLampGroup />} /> */}
+              </Route>
+            </Route>
+          </Route>
+        </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

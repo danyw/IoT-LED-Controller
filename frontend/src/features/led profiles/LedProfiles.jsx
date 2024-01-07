@@ -11,24 +11,24 @@ import {
 import ledProfiles from '../../data/ledProfiles';
 import React, { useState } from 'react';
 
-const LEDProfiles = () => {
+const LedProfiles = () => {
   const [selectedProfile, setSelectedProfile] = useState('Cool White');
 
   const handleProfileChange = (event) => {
     setSelectedProfile(event.target.value);
   };
   const handleAddProfile = () => {
-    // Logic to add a new profile
+    // TODO
   };
 
   const handleDeleteProfile = () => {
-    // Logic to delete a profile
+    // TODO
   };
 
   const currentProfile = ledProfiles[selectedProfile];
 
   return (
-    <Box m="20px" max-width="100%">
+    <Box m={{ xs: '10px', md: '20px' }} maxWidth="100%">
       <Header title="LED Profiles" subtitle="List of LED profiles." />
       <FormControl fullWidth margin="normal">
         <InputLabel id="led-profile-select-label">LED Profile</InputLabel>
@@ -64,4 +64,4 @@ const LEDProfiles = () => {
   );
 };
 
-export default LEDProfiles;
+export default LedProfiles;

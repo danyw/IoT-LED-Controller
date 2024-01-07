@@ -143,7 +143,7 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="All Lamps"
-              to="/allLamps"
+              to="/dash/allLamps"
               icon={<WorkspacesOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -151,19 +151,23 @@ const Sidebar = () => {
             <FormControl fullWidth variant="outlined" sx={{ mt: 2, mb: 4 }}>
               <Select
                 value={selected}
-                onChange={(e) => setSelected(e.target.value)}
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  setSelected(selectedValue);
+                  window.location.href = `/lampgroups/${selectedValue}`;
+                }}
               >
-                <MuiMenuItem value="group1">
-                  <Link to="/group1">Group 1</Link>
+                <MuiMenuItem value="room1">
+                  <Link to="/room1">Room 1</Link>
                 </MuiMenuItem>
                 <MuiMenuItem value="group2">
-                  <Link to="/group2">Group2</Link>
+                  <Link to="group2">Group2</Link>
                 </MuiMenuItem>
                 <MuiMenuItem value="group3">
-                  <Link to="/group3">Group 3</Link>
+                  <Link to="group3">Group 3</Link>
                 </MuiMenuItem>
                 <MuiMenuItem value="group4">
-                  <Link to="/group4">Group 4</Link>
+                  <Link to="group4">Group 4</Link>
                 </MuiMenuItem>
               </Select>
             </FormControl>
@@ -235,7 +239,7 @@ const Sidebar = () => {
             />
             <Item
               title="LED Profiles"
-              to="/ledprofiles"
+              to="/dash/ledprofiles"
               icon={<TipsAndUpdatesOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
