@@ -5,11 +5,9 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import Layout from './components/Layout';
 import DashLayout from './components/DashLayout';
 import LedProfiles from './features/led profiles/LedProfiles';
-import LampGroupsList from './features/lamp groups/LampGroupsList';
-import LampGroup from './features/lamp groups/LampGroup';
-import Lamps from './components/Lamps';
 import Dashboard from './features/dashboard/Dashboard';
 import AllLamps from './features/lamp groups/AllLamps';
+import LampDetails from './features/lamp groups/LampDetails';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -29,15 +27,18 @@ function App() {
               <Route path="alllamps">
                 <Route index element={<AllLamps />} />
               </Route>
+              <Route path="lampdetails">
+                <Route index element={<LampDetails />} />
+              </Route>
               <Route path="ledprofiles">
                 <Route index element={<LedProfiles />} />
               </Route>
 
-              <Route path="lampgroupslist">
+              {/* <Route path="lampgroupslist">
                 <Route index element={<LampGroupsList />} />
                 <Route path=":id" element={<LampGroup />} />
-                {/* <Route path="newgroup" element={<NewLampGroup />} /> */}
-              </Route>
+                <Route path="newgroup" element={<NewLampGroup />} />
+              </Route> */}
             </Route>
           </Route>
         </Routes>

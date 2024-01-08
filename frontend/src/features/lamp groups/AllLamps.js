@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../config/theme';
+import { useNavigate } from 'react-router-dom';
 
 const AllLamps = () => {
   const [selectedGroup, setSelectedGroup] = useState(
@@ -20,6 +21,8 @@ const AllLamps = () => {
   );
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const navigate = useNavigate();
 
   const columns = [
     { field: 'id', headerName: 'ID' },
@@ -48,6 +51,14 @@ const AllLamps = () => {
     },
   ];
 
+  const handleRowSelection = (selectionModel) => {
+    if (selectionModel.length > 0) {
+      const selectedLampId = selectionModel[0];
+    console.log(selectedLampId);
+    navigate('/dash/lampdetails', { state: { selectedLampId } });
+  };
+};
+
   const handleGroupChange = (event) => {
     setSelectedGroup(event.target.value);
   };
@@ -64,9 +75,15 @@ const AllLamps = () => {
     // TODO
   };
 
-  const handleShowDetails = () => {
-    // TODO
-  };
+  // const handleShowDetails = () => {
+  //   if (selectedLamps.length > 0) {
+  //     navigate('/dash/lampdetails', { state: { selectedLamps } });
+  //   } else {
+  //     // Optionally, you can provide some feedback to the user
+  //     // e.g., showing an alert or a notification
+  //     alert("Please select at least one lamp to view details.");
+  //   }
+  // };
 
   const handleDeleteSelectedLamps = () => {
     // TODO
@@ -156,18 +173,19 @@ const AllLamps = () => {
         }}
       >
         <DataGrid
-          checkboxSelection
           rows={lampGroups[selectedGroup].lamps}
           columns={columns}
+          onRowSelectionModelChange={handleRowSelection}
+          // rowSelectionModel={selectedLamp}
         />
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={handleShowDetails}
           sx={{ margin: '0.3rem' }}
         >
           Details
-        </Button>
+        </Button> */}
         <Button
           variant="contained"
           color="primary"

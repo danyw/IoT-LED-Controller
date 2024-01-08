@@ -24,7 +24,7 @@ const lampGroups = {
     purpose: 'Support vegetative growth',
     lamps: [
       {
-        id: 'lamp1',
+        id: 'lamp2',
         type: 'LED',
         wattage: 30,
         spectrum: 'Blue-Enriched',

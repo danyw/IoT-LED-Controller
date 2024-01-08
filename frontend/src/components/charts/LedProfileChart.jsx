@@ -6,17 +6,19 @@ import ledProfiles from '../../data/ledProfiles';
 import { useTheme } from '@mui/material';
 import { tokens } from '../../config/theme';
 
-const LedProfileChart = ({ profileName, isCustomLineColors = false, isDashboard = false }) => {
+const LedProfileChart = ({
+  profileName,
+  isCustomLineColors = false,
+  isDashboard = false,
+}) => {
   const theme = useTheme();
   if (!profileName || !ledProfiles[profileName]) {
     return <div>No LED profile selected or profile does not exist.</div>;
   }
-  
+
   const colors = tokens(theme.palette.mode);
   const ledProfile = ledProfiles[profileName];
   const data = prepareLedData([ledProfile]);
-
- 
 
   // make sure parent container have a defined height when using
   // responsive component, otherwise height will be 0 and
@@ -64,12 +66,12 @@ const LedProfileChart = ({ profileName, isCustomLineColors = false, isDashboard 
               stroke: colors.white[100],
             },
           },
-            legend: {
-              text: {
-                fill: colors.white[100],
-              },
+          legend: {
+            text: {
+              fill: colors.white[100],
             },
-          
+          },
+
           ticks: {
             line: {
               stroke: colors.white[100],
@@ -90,9 +92,8 @@ const LedProfileChart = ({ profileName, isCustomLineColors = false, isDashboard 
             color: colors.yellowAccent[700],
           },
         },
-
       }}
-      colors={isDashboard ? { datum: "color" } : { scheme: "spectral" }}
+      colors={isDashboard ? { datum: 'color' } : { scheme: 'spectral' }}
       enablePoints={false}
       pointSize={10}
       pointColor={{ theme: 'background' }}
@@ -134,13 +135,13 @@ const LedProfileChart = ({ profileName, isCustomLineColors = false, isDashboard 
         linearGradientDef(
           'gradientX',
           [
-            { offset: 0, color: '#610061' },     // Violet start at 380nm
+            { offset: 0, color: '#610061' }, // Violet start at 380nm
             { offset: ((450 - 380) / (780 - 380)) * 100, color: '#0046ff' }, // Violet end at 450nm
             { offset: ((495 - 380) / (780 - 380)) * 100, color: '#00ffcb' }, // Blue end at 495nm
             { offset: ((570 - 380) / (780 - 380)) * 100, color: '#e1ff00' }, // Green end at 570nm
             { offset: ((590 - 380) / (780 - 380)) * 100, color: '#ffdf00' }, // Yellow end at 590nm
             { offset: ((620 - 380) / (780 - 380)) * 100, color: '#ff7700' }, // Orange end at 620nm
-            { offset: 100, color: '#610000' },                                // Red end at 780nm
+            { offset: 100, color: '#610000' }, // Red end at 780nm
           ],
           { x1: 0, x2: 1, y1: 0, y2: 0 }
         ), // Horizontal gradient
