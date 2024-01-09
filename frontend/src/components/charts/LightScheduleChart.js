@@ -1,7 +1,7 @@
 import { ResponsiveLine } from '@nivo/line';
 
 const LightScheduleChart = ({ data }) => {
-    console.log(data);
+
   return (
     <ResponsiveLine
       data={data}

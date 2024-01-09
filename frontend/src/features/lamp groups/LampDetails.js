@@ -21,6 +21,7 @@ import LightScheduleChart from '../../components/charts/LightScheduleChart';
 import mockScheduleProfiles from '../../data/mockScheduleProfiles';
 import ScheduleSelector from './ScheduleSelector';
 import { transformProfileToSchedule } from './transformProfileToSchedule';
+import { sendLedControlRequest } from '../../api/ledControlApi';
 
 // TODO
 const fetchLampDetails = async (lampId) => {
@@ -40,11 +41,11 @@ const LampDetails = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [colorValue, setColorValue] = useState({
-    'warm white': 50,
-    'cool white': 50,
-    green: 50,
-    blue: 50,
-    red: 50,
+    'warm white': 0,
+    'cool white': 0,
+    green: 0,
+    blue: 0,
+    red: 0,
   });
   const [lampData, setLampData] = useState(null);
   const [tempColorValue, setTempColorValue] = useState({});
@@ -55,30 +56,6 @@ const LampDetails = () => {
     Object.keys(mockScheduleProfiles)[0]
   );
 
-  //   const transformProfileToSchedule = (profileData) => {
-  //     // Check if profileData is valid
-  //     if (!profileData) {
-  //       console.error('Invalid profile data:', profileData);
-  //       return Array.from({ length: 24 }, () => Array(ledColors.length).fill(0));
-  //     }
-
-  //     const transformedSchedule = [];
-  //     for (let i = 0; i < 24; i++) {
-  //       const hourData = ledColors.map(color => {
-  //         // Check if the color exists in the profile data
-  //         if (!(color in profileData)) {
-  //           console.warn(`Color '${color}' not found in profile data.`);
-  //           return 0; // Default value if color data is missing
-  //         }
-  //         return profileData[color][i];
-  //       });
-  //       transformedSchedule.push(hourData);
-  //     }
-  //     return transformedSchedule;
-  //   };
-  // State for the current schedule
-  // const [currentSchedule, setCurrentSchedule] = useState(mockScheduleProfiles[selectedProfileName]);
-  // Initialize schedule with the first profile data
   const initialProfileData = mockScheduleProfiles[selectedProfileName];
   const initialSchedule = transformProfileToSchedule(initialProfileData);
   const [schedule, setSchedule] = useState(initialSchedule);
@@ -110,6 +87,10 @@ const LampDetails = () => {
     }));
   };
 
+  const handleSliderChangeCommitted = (color) => (event, newValue) => {
+    sendLedControlRequest(color, newValue);
+  };
+
   const handleInputChange = (color) => (event) => {
     setTempColorValue({ ...tempColorValue, [color]: event.target.value });
   };
@@ -119,6 +100,7 @@ const LampDetails = () => {
       ...prev,
       [color]: tempColorValue[color] === '' ? 0 : Number(tempColorValue[color]),
     }));
+    sendLedControlRequest(color, tempColorValue[color]);
   };
 
   const handleKeyPress = (color) => (event) => {
@@ -128,6 +110,7 @@ const LampDetails = () => {
         [color]:
           tempColorValue[color] === '' ? 0 : Number(tempColorValue[color]),
       }));
+      sendLedControlRequest(color, tempColorValue[color]);
     }
   };
 
@@ -152,7 +135,7 @@ const LampDetails = () => {
     })),
   }));
 
-  console.log(JSON.stringify(chartData, null, 2));
+  // console.log(JSON.stringify(chartData, null, 2));
 
   return (
     <Box m={{ xs: '10px', md: '20px' }} maxWidth="100%">
@@ -189,6 +172,7 @@ const LampDetails = () => {
                     <Slider
                       value={colorValue[color]}
                       onChange={handleSliderChange(color)}
+                      onChangeCommitted={handleSliderChangeCommitted(color)}
                       aria-labelledby="continuous-slider"
                       style={{ maxWidth: '400px', color: colorMap[color] }}
                       step={1}
