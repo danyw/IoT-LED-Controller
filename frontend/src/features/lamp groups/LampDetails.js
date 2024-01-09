@@ -13,6 +13,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  Button,
 } from '@mui/material';
 import { tokens } from '../../config/theme';
 import { useState, useEffect } from 'react';
@@ -32,6 +33,8 @@ const fetchLampDetails = async (lampId) => {
     watts: 60,
     temperature: 35,
     efficiency: 90,
+    current: 0,
+    voltage: 0
   };
 };
 
@@ -134,6 +137,10 @@ const LampDetails = () => {
       y: hourData[index],
     })),
   }));
+
+  const handleApplyProfile = () => {
+
+  }
 
   // console.log(JSON.stringify(chartData, null, 2));
 
@@ -256,6 +263,9 @@ const LampDetails = () => {
           maxWidth: { sm: '90vw', md: '50vw'},
         }}  >
           <LightScheduleChart data={chartData} />
+          <Button variant="contained" color="primary" onClick={handleApplyProfile} sx={{ marginLeft: '2rem' }} >
+        Apply the profile
+      </Button>
         </Box>
       </Box>
     </Box>

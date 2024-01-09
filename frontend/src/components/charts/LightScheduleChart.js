@@ -1,11 +1,15 @@
 import { ResponsiveLine } from '@nivo/line';
+import { useTheme } from '@mui/material';
+import { tokens } from '../../config/theme';
 
 const LightScheduleChart = ({ data }) => {
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const lineColors = [colors.yellowAccent[500], colors.white[400], '#32CD32', colors.blueAccent[500], '#ff0000']; 
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 30, right: 70, bottom: 50, left: 60 }}
+      margin={{ top: 30, right: 100, bottom: 50, left: 60 }}
       xScale={{ type: 'linear', min: 0, max: 24 }}
       yScale={{
         type: 'linear',
@@ -33,7 +37,42 @@ const LightScheduleChart = ({ data }) => {
         legendOffset: -40,
         legendPosition: 'middle',
       }}
-      colors={{ scheme: 'spectral' }}
+      theme={{
+        axis: {
+          domain: {
+            line: {
+              stroke: colors.white[100],
+            },
+          },
+          legend: {
+            text: {
+              fill: colors.white[100],
+            },
+          },
+
+          ticks: {
+            line: {
+              stroke: colors.white[100],
+              strokeWidth: 1,
+            },
+            text: {
+              fill: colors.white[100],
+            },
+          },
+        },
+        legends: {
+          text: {
+            fill: colors.white[100],
+          },
+        },
+        tooltip: {
+          container: {
+            color: colors.yellowAccent[700],
+          },
+        },
+      }}
+      // colors={{ scheme: 'spectral' }}
+      colors={lineColors}
       enablePoints={false}
       pointSize={10}
       pointColor={{ theme: 'background' }}
