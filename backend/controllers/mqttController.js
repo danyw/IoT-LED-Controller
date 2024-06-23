@@ -34,10 +34,10 @@ console.log(value);
 console.log(color);
     const colorChannelMap = {
       'warmwhite': 1,
-      'coolwhite': 2,
+      'coolwhite': 5,
       'green': 3,
       'blue': 4,
-      'red': 5
+      'red': 2
     };
 
     const channel = colorChannelMap[color.toLowerCase()];

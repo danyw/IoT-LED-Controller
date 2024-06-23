@@ -22,7 +22,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-          const response = await axios.post('http://192.168.0.11:5001/auth', { username, password });
+          const response = await axios.post('http://192.168.0.108:5001/auth', { username, password });
           const token = response.data.token;
           localStorage.setItem('token', token);
           setUsername('');

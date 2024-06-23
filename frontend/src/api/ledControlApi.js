@@ -1,6 +1,6 @@
 export const sendLedControlRequest = async (color, value) => {
     try {
-      const response = await fetch('http://192.168.0.11:5001/mqtt/ledControl', {
+      const response = await fetch('http://192.168.0.108:5001/mqtt/ledControl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

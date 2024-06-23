@@ -12,12 +12,12 @@ const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5001;
 
 
-connectDB();
-// app.use(cors(corsOptions));
+
+app.use(cors(corsOptions));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-
+connectDB();
 // app.use('/users', require('./routes/userRoutes'));
 const mqttRoutes = require('./routes/mqttRoutes');
 const userRoutes = require('./routes/userRoutes');
