@@ -3,8 +3,9 @@
 <br />
 <div align="center">   
   </a>
-
-  <h3 align="center">IoT-based LED controller</h3>
+  <h1 align="center">IoT-based LED controller</h1>
+  <br>
+  <br>
 
 </div>
 
@@ -42,18 +43,17 @@
     </li>
   </ol>
 </details>
+<br>
 
 # About The Project
 The goal of this project is to build a universal IoT-based grow light LED controller. The core of the system is a Raspberry Pi-based gateway that coordinates the network and interfaces with a user control panel for data collection and system management. The system is designed for offline use, but can easily be deployed to the cloud. A key feature of the system is the independence of the controllers, which can operate autonomously while the server manages data collection and setting updates. The controller is designed to be a universal device, adaptable to varying requirements of LED diodes, spectrum, and power in agricultural applications.
 <div align="center">
-    <img src="assets/system_block_diagram.png" alt="system_block_diagram" width="350" height="auto">
+    <img src="assets/system_block_diagram.png" alt="system_block_diagram" width="500" height="auto">
     </a>
 </div>
 
 # How to use it
-Below, you will find the requirements, suggestions, and configuration code for each module. Feel free to reach out inc ase of any problems or questions.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Below, you will find the requirements, suggestions, and configuration code for each module. Feel free to reach out in case of any problems or questions.
 
 # Server
 I've decided to separate backend and fronted. This is my setup:
@@ -62,18 +62,28 @@ I've decided to separate backend and fronted. This is my setup:
 - The Node.js server runs separately, listening on a different port, and provides the API that the React app consumes.
 
 ## Hardware
-**Raspberry Pi **
+**Raspberry Pi**
+
 I've used an RPI 4, but other models should work. I recommend using a 64-bit OS like Debian, as MongoDB requires a 64-bit environment. While the project is configured for offline use, deploying to the cloud is possible and potentially easier.
 
 ## Frontend
 - React.js 
 - Material UI
 
-**React.js**
 <div align="center">
-    <img src="assets/ui.jpg" alt="ui" width="500" height="auto">
+    <img src="assets/ui_led_profiles.png" alt="ui" width="800" height="auto">
     </a>
 </div>
+<div align="center">
+    <img src="assets/ui_led_profiles_red.png" alt="ui" width="800" height="auto">
+    </a>
+</div>
+<div align="center">
+    <img src="assets/ui_lamp_details2.png" alt="ui" width="800" height="auto">
+    </a>
+</div>
+
+
 
 **Installation**
 1. On RPI:
@@ -84,10 +94,13 @@ git init --bare
 ```
 2. On PC add the Raspberry Pi directory as a remote repository: `git remote add rpi pi@raspberry-pi-ip-address:/path/to/react-app-remote`
 
-Note: I haven't implemented all features due to lack of time. At the moment, users can control LED channels, select LED profiles, and configure and schedule light times.
+Note: I haven't implemented all features due to lack of time. At the moment, users can control LED channels, select LED profiles, and configure and schedule light times. \
 Here is a simple demo:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/QfmdE5aYiLI/0.jpg)](https://www.youtube.com/watch?v=QfmdE5aYiLI)
+[![Youtube video](https://img.youtube.com/vi/QfmdE5aYiLI/0.jpg)](https://www.youtube.com/watch?v=QfmdE5aYiLI)
+
+
+
 
 ## Backend
 - Node.js
@@ -99,7 +112,7 @@ Here is a simple demo:
 
 Here is a basic flowchart of the MQTT service working on the backend:
 <div align="center">
-    <img src="assets/backend.jpg" alt="backend" max-width="500" height="auto">
+    <img src="assets/backend.jpg" alt="backend" width="800" height="auto">
     </a>
 </div>
 
@@ -117,7 +130,7 @@ Key Components:
 - Topics: Messages are categorized using topics, which clients can publish or subscribe to.
 
 <div align="center">
-    <img src="assets/mqtt_model.png" alt="mqtt model" width="500" height="auto">
+    <img src="assets/mqtt_model.png" alt="mqtt model" width="800" height="auto">
     </a>
 </div>
 
@@ -133,7 +146,7 @@ I've used SONOFF USB dongle, but installation may vary for different devices.
 
 **Installation**
 1. Verify the location of the USB dongle - `ls /dev/ttyACM*` or `ls -l /dev/ttyACM0`.
-2. However, it is recommended to use "by ID" mapping of the device (see [Adapter settings](https://www zigbee2mqtt.io/guide/configuration/adapter-settings.html)). This kind of device path mapping is more stable, but can also be handy if you have multiple serial devices connected to your Raspberry Pi. In the example below the device location is: `/dev/serial/by-id usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018ED3DDF-if00`.
+2. However, it is recommended to use "by ID" mapping of the device (see [Adapter settings](https://www.zigbee2mqtt.io/guide/configuration/adapter-settings.html)). This kind of device path mapping is more stable, but can also be handy if you have multiple serial devices connected to your Raspberry Pi. In the example below the device location is: `/dev/serial/by-id usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018ED3DDF-if00`.
 
 ```bash
 jacek@raspberrypi:~ $ ls -l /dev/serial/by-id
@@ -243,7 +256,7 @@ server {
 The basic flowchart of the controller system is shown in diagram below:
 
 <div align="center">
-    <img src="assets/code_flowchart.jpg" alt="code flowchart" width="500" height="auto">
+    <img src="assets/code_flowchart.jpg" alt="code flowchart" width="600" height="auto">
     </a>
 </div>
 
@@ -255,38 +268,42 @@ The RTC has two alarms:
 - Alarm B: Updates PWM channels every 15 minutes (can be adjusted to 1 hour but would reduce smoothness in brightness transitions).
 
 <div align="center">
-    <img src="assets/controller_pcb.jpg" alt="controller pcb" width="500" height="auto">
+    <img src="assets/controller_pcb.jpg" alt="controller pcb" width="600" height="auto">
     </a>
 </div>
 <div align="center">
-    <img src="assets/led_controller_enclosure.jpg" alt="enclosure" width="500" height="auto">
+    <img src="assets/led_controller_enclosure.jpg" alt="enclosure" width="600" height="auto">
     </a>
 </div>
 <div align="center">
-    <img src="assets/led_controller.jpg" alt="controller" width="500" height="auto">
+    <img src="assets/led_controller.jpg" alt="controller" width="600" height="auto">
     </a>
 </div>
 
 **Power supply**
+
 The system is powered by a 24V supply, which contains reverse polarity protection. Current monitoring is performed using the MAX4080, a current-sensing amplifier. It operates by translating a current flowing through a shunt resistor into a proportional voltage, which is then amplified for easy monitoring and feedback. Ideally, to achieve the full scale, the maximum load current that is measured should be used for choosing the gain. In this design 5A load is translated to 2.5V. The model used in the project is MAX4080T – which has 20V/V gain. To calculate the full-scale output voltage:
 $$V_{\text{OUT}} = R_{\text{SENSE}} \times I_{\text{LOAD(MAX)}} \times A_V$$
 
 The 12V supply powers a fan and 3.3V rail through a step-down regulator (LMR33620ADDA), and soft start functionality protects against inrush current by delaying the driver board's activation.
 
 **Microcontroller**
+
 The heart of the system is the microcontroller STM32WB55RGV. It has a few decoupling capacitors and two crystals. The SWDIO and SWCLK lines provide the programming and debug interface. External reference voltage can be connected or disconnected with 0Ω resistors. It provides a reference voltage of 2.5V.
 Settings are stored in the internal memory of the microcontroller, which has a write endurance of 10,000 cycles—sufficient for typical use.
 
 <div align="center">
-    <img src="assets/memory_retention.png" alt="memory retention" width="300" height="auto">
+    <img src="assets/memory_retention.png" alt="memory retention" width="500" height="auto">
     </a>
 </div>
 
 **Power supplly for the driver PCB**
+
 There is a 24V rail used to power the control board, and the additional circuit creates a 24V soft start power rail. This rail is used to power the driver board. The soft start allows for a delay, before enabling the driver board. Large capacitors can be used on a driver board, which
 can create inrush current. In some cases, it could be enough to trip the power protection used on the switch mode power supply that powers the microcontroller. The LED driver board is powered through the 1kΩ resistor (R8). At some preset time that resistor is being shorted by the MOSFET.
 
 **PWM, Fans, and RF**
+
 The fan interface section is designed for 4 pins type of fan. There is a PWM input generating signal at a frequency of 25kHz, which is commonly used in the industry. The PWM pin is connected through an open collector transistor. There is a 12V supply for a fan and a ground. The tachometer signal goes through the resistor network to the microcontroller. It is not necessary to use it, therefore 3 pin types of fans can also be used.
 
 PWM buffer uses SN74HC365D from Texas Instruments. It has six buffers with 3-state outputs. All channels are placed into the high impedance state, when either of the output enable pins are set to high. The reason why the buffer is used is that sometimes microcontrollers can toggle some of the pins, particularly while booting up. The PWM outputs are disabled until everything is up and running.
@@ -315,11 +332,11 @@ The controller board has a fixed number of header pins that are also used by the
 The LED driver board is based on buck topology using the AL8843Q. It has four LED drivers, each with different current limits. The maximum current is 7A. Both fans and temperature sensors can be connected.
 
 <div align="center">
-    <img src="assets/led_drivers.jpg" alt="led drivers" width="500" height="auto">
+    <img src="assets/led_drivers.jpg" alt="led drivers" width="800" height="auto">
     </a>
 </div>
 <div align="center">
-    <img src="assets/driver_pcb.jpg" alt="driver pcb" width="500" height="auto">
+    <img src="assets/driver_pcb.jpg" alt="driver pcb" width="800" height="auto">
     </a>
 </div>
 
@@ -330,11 +347,8 @@ AL8843Q chosen for this project is an integrated hysteresis mode DC-DC step down
 
 
 <div align="center">
-    <img src="assets/led_controller_drivers.png" alt="led_controller drivers" width="500" height="auto">
+    <img src="assets/led_controller_drivers.png" alt="led_controller drivers" width="800" height="auto">
     </a>
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
